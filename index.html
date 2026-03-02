@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>中国樱花花期预测 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Leaflet.js 地图 -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="sakura-icon">🌸</span>
+        <div class="logo-text">
+          <h1>中国樱花花期预测</h1>
+          <p class="year-tag">2026</p>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <a href="#map-section" class="nav-link active">地图</a>
+        <a href="#table-section" class="nav-link">花期表</a>
+        <a href="#about-section" class="nav-link">预测说明</a>
+      </nav>
+      <div class="update-info">
+        <span id="update-time">更新时间：2026年3月2日</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 英雄区域 -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h2>2026年全国樱花花期预测</h2>
+        <p class="hero-desc">基于气象数据与物候学模型，覆盖全国49个代表性赏樱城市</p>
+        <div class="prediction-summary">
+          <div class="summary-item">
+            <span class="summary-num" id="blooming-count">0</span>
+            <span class="summary-label">已开花</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-num" id="peak-count">0</span>
+            <span class="summary-label">盛开中</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-num" id="upcoming-count">0</span>
+            <span class="summary-label">即将开放</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-num">49</span>
+            <span class="summary-label">监测城市</span>
+          </div>
+        </div>
+      </div>
+      <div class="legend-box">
+        <h3>花况图例</h3>
+        <div class="legend-items">
+          <div class="legend-item"><span class="dot dot-winter"></span>冬樱（12月-1月）</div>
+          <div class="legend-item"><span class="dot dot-early"></span>早樱（2月-3月初）</div>
+          <div class="legend-item"><span class="dot dot-mid"></span>中樱（3月中旬）</div>
+          <div class="legend-item"><span class="dot dot-peak"></span>盛开中</div>
+          <div class="legend-item"><span class="dot dot-late"></span>晚樱（4月）</div>
+          <div class="legend-item"><span class="dot dot-ended"></span>已落花</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 预测说明横幅 -->
+  <div class="notice-bar">
+    <span class="notice-icon">📋</span>
+    <span id="notice-text">今年全国大部分地区樱花花期预计接近常年，长江中下游地区3月中下旬为最佳赏樱期，西南地区冬樱已陆续开放。</span>
+  </div>
+
+  <!-- 地图区域 -->
+  <section id="map-section" class="map-section">
+    <div class="section-header">
+      <h2>全国赏樱地图</h2>
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">全部</button>
+        <button class="filter-btn" data-filter="blooming">已开花</button>
+        <button class="filter-btn" data-filter="peak">盛开中</button>
+        <button class="filter-btn" data-filter="upcoming">即将开放</button>
+        <button class="filter-btn" data-filter="ended">已落花</button>
+      </div>
+    </div>
+    <div id="map" class="map-container"></div>
+  </section>
+
+  <!-- 花期预测表 -->
+  <section id="table-section" class="table-section">
+    <div class="section-header">
+      <h2>各地花期预测</h2>
+      <p class="section-desc">初绽：标准树上有3-5朵花苞绽放；盛开：标准树上有80%花苞绽放</p>
+    </div>
+
+    <!-- 按区域分组 -->
+    <div class="region-tabs">
+      <button class="region-tab active" data-region="all">全国</button>
+      <button class="region-tab" data-region="southwest">西南地区</button>
+      <button class="region-tab" data-region="south">华南地区</button>
+      <button class="region-tab" data-region="central">长江中下游</button>
+      <button class="region-tab" data-region="east">华东地区</button>
+      <button class="region-tab" data-region="north">华北地区</button>
+      <button class="region-tab" data-region="northeast">东北地区</button>
+      <button class="region-tab" data-region="northwest">西北地区</button>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="forecast-table" id="forecast-table">
+        <thead>
+          <tr>
+            <th>城市</th>
+            <th>赏樱地点</th>
+            <th>地区</th>
+            <th>初绽日期</th>
+            <th>盛开日期</th>
+            <th>落花日期</th>
+            <th>花期长度</th>
+            <th>花况</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <!-- JS动态填充 -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 预测方法说明 -->
+  <section id="about-section" class="about-section">
+    <div class="about-inner">
+      <h2>预测方法说明</h2>
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="about-icon">🌡️</div>
+          <h3>气温模型</h3>
+          <p>基于武汉大学樱花研究（谭静等，2021），始花期与冬季及2月平均气温密切相关。气温每升高1℃，始花期提前约3-8天。花期内高温缩短花期，低温延长花期。</p>
+        </div>
+        <div class="about-card">
+          <div class="about-icon">🌧️</div>
+          <h3>降水影响</h3>
+          <p>花期长度与开花期间总降水量呈正相关，降水越多花期越长。这是由于降水导致的降温对花期有延长效果。强降水、降雪等恶劣天气则会缩短花期。</p>
+        </div>
+        <div class="about-card">
+          <div class="about-icon">❄️</div>
+          <h3>冬季低温</h3>
+          <p>樱花需要经历冬季低温完成春化才能开花。冬季低温升高会延迟开花时间，而早春气温升高会直接导致开花时间提前，两者对樱花初花期有相反的影响。</p>
+        </div>
+        <div class="about-card">
+          <div class="about-icon">📅</div>
+          <h3>花期规律</h3>
+          <p>中国樱花从南至北次第开放，花期跨越半年。云南大理冬樱12月初开花，东北地区5月开花。长江中下游为主要赏樱区，3月中下旬为最佳观赏期。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2026 中国樱花花期预测 | 数据来源：南京林业大学樱花研究中心、各地气象局</p>
+      <p>预测数据仅供参考，实际花期受气候变化影响，请关注当地实时花情播报</p>
+    </div>
+  </footer>
+
+  <!-- 樱花飘落动画 -->
+  <div class="sakura-fall" id="sakura-fall" aria-hidden="true"></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // 樱花飘落效果
+    (function() {
+      const container = document.getElementById("sakura-fall");
+      const petals = ["🌸", "🌺", "🌷"];
+      function createPetal() {
+        const el = document.createElement("span");
+        el.textContent = petals[Math.floor(Math.random() * petals.length)];
+        el.style.cssText = `
+          position:fixed;
+          top:-40px;
+          left:${Math.random() * 100}vw;
+          font-size:${12 + Math.random() * 16}px;
+          opacity:${0.3 + Math.random() * 0.5};
+          animation:fall ${4 + Math.random() * 6}s linear forwards;
+          pointer-events:none;
+          z-index:9999;
+        `;
+        container.appendChild(el);
+        setTimeout(() => el.remove(), 10000);
+      }
+      // 只在英雄区域可见时创建
+      let interval = setInterval(() => {
+        if (window.scrollY < 400) createPetal();
+      }, 800);
+    })();
+  </script>
+</body>
+</html>
