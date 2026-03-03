@@ -1,0 +1,38 @@
+# 每天北京时间 8:00 拉取最新天气并更新花期预测
+name: 每日天气订正花期
+
+on:
+  schedule:
+    # 北京时间 8:00 = UTC 0:00（东八区）
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 支持手动触发
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 拉取天气并更新 data.js
+        run: node scripts/update-forecast.js
+
+      - name: 提交并推送
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet data.js; then
+            echo "无变更，跳过提交"
+          else
+            git add data.js
+            git commit -m "chore: 每日天气订正花期 [automated]"
+            git push
+          fi
